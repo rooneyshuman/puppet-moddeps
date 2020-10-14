@@ -1,4 +1,3 @@
-require 'codeclimate-test-reporter'
 require 'coveralls'
 require 'simplecov'
 
@@ -6,7 +5,6 @@ require 'simplecov'
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
   Coveralls::SimpleCov::Formatter,
   SimpleCov::Formatter::HTMLFormatter,
-  CodeClimate::TestReporter::Formatter # this has to be last or reporting fails.
 ]
 SimpleCov.start 'rails' # without 'rails' this doesn't work right.
 
