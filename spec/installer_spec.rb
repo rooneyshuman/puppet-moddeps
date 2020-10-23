@@ -85,8 +85,11 @@ describe Puppet::Moddeps::Installer do
   describe '.install Puppet modules' do
      it "should install dependencies for a single module" do
        base_object = Puppet::Moddeps::Installer.new
+       module_to_install = Puppet::Moddeps::Module.new("owner", "name", "version")
        allow(base_object).to receive(:installed?).and_return(true)
-       allow(base_object).to receive(:call_puppet) # this is not properly stubbing installer.rb line 205 :(
+       allow(base_object).to receive(:module_versions_match?).and_return(false)
+       allow(base_object).to receive(:resolve_local_module_deps).and_return([module_to_install])
+       allow(base_object).to receive(:call_puppet)
 
        apache_model = double('model')
        allow(apache_model).to receive(:title).and_return('apache')
@@ -102,8 +105,11 @@ describe Puppet::Moddeps::Installer do
 
      it "should install dependencies for multiple modules" do
        base_object = Puppet::Moddeps::Installer.new
+       module_to_install = Puppet::Moddeps::Module.new("owner", "name", "version")
        allow(base_object).to receive(:installed?).and_return(true)
-       allow(base_object).to receive(:call_puppet) # this is not properly stubbing installer.rb line 205 :(
+       allow(base_object).to receive(:module_versions_match?).and_return(false)
+       allow(base_object).to receive(:resolve_local_module_deps).and_return([module_to_install])
+       allow(base_object).to receive(:call_puppet)
 
        apache_model = double('model')
        allow(apache_model).to receive(:title).and_return('apache')
@@ -122,7 +128,7 @@ describe Puppet::Moddeps::Installer do
        allow(PuppetfileResolver::Puppetfile::LocalModule).to receive(:new).with('nginx').and_return(nginx_model)
 
        base_object.install(['apache', 'nginx'])
-       expect(base_object).to receive(:call_puppet).at_least(:once)
+       expect(base_object).to have_received(:call_puppet).at_least(:once)
      end
   end
 end
